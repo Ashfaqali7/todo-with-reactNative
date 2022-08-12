@@ -9,34 +9,36 @@ import {
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 // import delete from './assits/delete';
 import React, {useState} from 'react';
 const ToDO = () => {
-  const [inputData, setInputData] = useState('');
+  const [inputText, setInputText] = useState('');
   const [items, setitems] = useState([]);
-  const [editData, seteditData] = useState(null);
+  const [Indexnum, setIndexnum] = useState();
   //additem
   const additem = () => {
-    if (!inputData) {
+    if (Indexnum) {
+      items[Indexnum] = inputText;
+      setitems([...items]);
     } else {
-      setitems([...items, inputData]);
-      setInputData();
+      setitems([...items, inputText]);
+      // setInputText();
     }
   };
   //Delete Item
   const deleteItem = id => {
-    const newlist = items.filter((e, index) => {
-      return index !== id;
-    });
-    setitems(newlist);
+    // const newlist = items.filter((e, index) => {
+    //   return index !== id;
+    // });
+    // setitems(newlist);
+    items.splice(id, 1);
+    setitems([...items]);
   };
   //edit
-  const editItem = id => {
-    const updatelist = items.find((e, index) => {
-      return index === id;
-    });
-    setInputData(updatelist);
-    seteditData(id);
+  const editItem = (e, i) => {
+    setIndexnum(i);
+    setInputText(e);
   };
 
   //Delete All
@@ -57,27 +59,17 @@ const ToDO = () => {
       </View>
       <View style={styles.inputpButton}>
         <TextInput
-          onChangeText={e => setInputData(e)}
-          value={inputData}
+          onChangeText={e => setInputText(e)}
+          value={inputText}
           placeholder="ADD ToDo"
+          style={{flex: 1}}
         />
+        <TouchableOpacity style={styles.button} onPress={additem}>
+          <Text style={{}}>
+            <Icon name="add" size={30} color="#fff" />
+          </Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity style={styles.button} onPress={additem}>
-        <Text
-          style={{
-            width: 100,
-            height: 40,
-
-            fontSize: 30,
-
-            color: '#fff',
-            // marginBottom: 30,
-            textAlign: 'center',
-          }}>
-          +
-        </Text>
-      </TouchableOpacity>
 
       <ScrollView>
         {items.map((e, index) => {
@@ -86,19 +78,17 @@ const ToDO = () => {
               <Text>{e}</Text>
 
               <View style={styles.EandB}>
-                <TouchableOpacity onPress={() => editItem(index)}>
-                  {/* edit */}
-                  <Image
-                    style={styles.ImageD}
-                    source={require('./assits/edit.png')}
-                  />
+                {/* edit */}
+                <TouchableOpacity onPress={() => editItem(e, index)}>
+                  <Text style={styles.IconText}>
+                    <Icon name="edit" color="#fff" size={20} />
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => deleteItem(index)}>
                   {/* delete */}
-                  <Image
-                    style={styles.ImageD}
-                    source={require('./assits/delete.png')}
-                  />
+                  <Text style={styles.IconText}>
+                    <Icon name="delete" color="#fff" size={20} />
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -106,10 +96,9 @@ const ToDO = () => {
         })}
         <View style={styles.ClearView}>
           <TouchableOpacity style={styles.buttonClear} onPress={deleteAll}>
-            <Image
-              style={styles.ImageD1}
-              source={require('./assits/delete.png')}
-            />
+            <Text style={styles.IconText}>
+              <Icon name="delete" color="#fff" size={20} />
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -146,19 +135,40 @@ const styles = StyleSheet.create({
     width: '90%',
     borderRadius: 30,
     margin: 10,
+    paddingHorizontal: 10,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   button: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
     backgroundColor: '#555b6e',
-    width: 100,
-    height: 40,
+    width: 30,
+    height: 30,
     // flexDirection: 'row',
-    borderRadius: 30,
-    margin: 20,
+    borderRadius: 20,
+    // margin: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   output: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 12,
     borderWidth: 1,
     borderColor: '#faf9f9',
     width: 300,
@@ -173,10 +183,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#faf9f9',
   },
   EandB: {
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    // width: 100,
-    // height: 10,
+
+    // color: '#',
   },
   ImageD: {
     width: 20,
@@ -206,6 +216,25 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  IconText: {
+    // borderColor: '#fb8b24',
+    backgroundColor: '#555b6e',
+
+    marginHorizontal: 5,
+    paddingVertical: 3.7,
+    borderRadius: 30,
+    borderWidth: 1,
+    textAlign: 'center',
+    width: 25,
+    height: 25,
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
+    backgroundColor: '#555b6e',
+    width: 30,
+    height: 30,
   },
 });
 export default ToDO;
